@@ -39,6 +39,17 @@ file.copy(paste(SWATplus_path, "SWATplus.exe", sep = ""), project_path, overwrit
 
 setup_input_files(project_path, list("htam.txt;hyd;1", "Qsf_lag.txt;sands;1"))
 ```
+```{r Run SWATplusHybam, include=FALSE}
+#Output to csv in the print file
+q_sim_day <- run_swatplus(project_path = project_path,
+                          output = define_output(file = "channel_sd",
+                                                  variable = "flo_out",
+                                                  unit = 1),
+                          start_date = "2000-1-1",
+                          end_date = "2016-1-1",
+                          years_skip = 2)
+```
+
 
 
 ```{r Run SWATplusHybam, include=FALSE}
@@ -52,16 +63,18 @@ system(shQuote(paste(project_path, "/SWATplus.exe", sep = ""), type = "cmd"))
 ```{r Load data}
 # If you have observed data or saved simualtions you can load them here
 # Attach an example file ??
-q_obs = read_csv(file = "D:/FP/Documents/SWATplus_projects/2020-09-Projet_MDD/observations/Qobs_La_Pastora.csv")
+q_obs = read_csv(file = "D:/FP/Documents/Data/Qobs_req.csv")
 q_obs$Date <- as.Date(q_obs$Date, format = "%Y-%m-%d")
 
 sim_csv = read_csv(file = paste(project_path, "/channel_sd_day.csv", sep = ""), skip = 1)
 # Be carefull the channel number IS NOT the subbasin number!
-channel = 25
+channel = 1
 sim_csv <- sim_csv[sim_csv$gis_id == channel,]
 sim_csv["date"] <- paste(sim_csv$yr, sim_csv$mon, sim_csv$day, sep = "-")
 sim_csv$date <- as.Date(sim_csv$date, format = "%Y-%m-%d")
 sim_csv$flo_out <- as.numeric(sim_csv$flo_out)
+
+sim_csv
 
 sim_month = monthly_average(sim_csv, "flo_out")
 
@@ -79,8 +92,8 @@ q_subset <- load_swat_run(save_dir = path_saved_q,
 
 
 ```{r Compute statistics}
-start_date = '2002-01-01'
-end_date = '2014-07-31'
+start_date = '2009-03-21'
+end_date = '2016-06-30'
 title = 'Lagarto'
 
 # Always start with observed or your reference data!

@@ -227,7 +227,28 @@ setup_input_files <- function(path, files)
   # faire une liste et tout append a la fin
 }
 
-
+## Write new parameter bounds:
+##################################################
+setup_par_bounds <- function(path) 
+{
+  # clear previous input files
+  my_file<-file(paste(path,"/file.cio", sep=""))
+  
+  # clean the old file input infos
+  my_new_file = readLines(paste(path,"/cal_parms.cal", sep=""))
+  my_new_file = my_new_file[-(187:191)]
+  write(my_new_file, file=paste(path,"/cal_parms.cal", sep=""))
+  
+  # create new lines
+  bounds = c("no_rte                         bsn       0.00000      10.00000              null
+fpgeom                         bsn       0.00000      10.00000              null
+theta_fp                       bsn       0.00000      10.00000              null
+alpha_f                        bsn       0.00000      10.00000              null")
+  
+  write(bounds, file=paste(path,"/cal_parms.cal", sep=""), append=TRUE)
+  
+  close(my_file)
+}
 
 
 
