@@ -6,7 +6,7 @@ SWATplusHybam is a new model and haven't been tested on many devices yet, keep i
 ## Table of content
 * [Introduction](#Introduction)
 * [Installation](#Installation)
-* [Getting started](#Getting started)
+* [Getting started](#Getting-started)
 * [Contact](#Contact)
 
 ## Introduction
@@ -79,12 +79,8 @@ Other simple ways to plot your data are shown on the [SWATplusR](https://chrissc
 ```Fortran
 if (no_rte == 1)   call sd_ch_rt_ck_wave
 if (no_rte == 2)   call sd_rt_ck_wave_LF
-if (no_rte == 3)   call sd_rt_ck_wave_tri
-if (no_rte == 4)   call sd_rt_ck_wave_2FP
-if (no_rte == 5)   call sd_ch_rt_diff_wave
-if (no_rte == 6)   call sd_rt_diff_wave_h
-if (no_rte == 7)   call sd_rt_inrtial_wave
-if (no_rte == 8)   call sd_rtmuskKvar
+if (no_rte == 3)   call sd_rt_diff_wave_h
+if (no_rte == 4)   call sd_rtmuskKvar
 ```
 Parameter changes in a R notebook is already available thanks to parameter sets as described in [SWATplusR](https://github.com/chrisschuerz/SWATplusR). So here we are using the same trick to chose the water routing algorithm.
 ```r
