@@ -1,7 +1,7 @@
 # SWATplusHybam <img src="./img/Hybam.jpg" align="right" />
 `SWATplusHybam` is a model used to simulate water and sediments routing. It is a modified version of the [SWAT+](https://swat.tamu.edu/software/plus/) model aiming to enhance precision on simulations for large sized basins (such as the Amazon basin). It is meant to be handled from a simple R program based on the [SWATplusR](https://github.com/chrisschuerz/SWATplusR) package.
 
-SWATplusHybam is a new model and haven't been tested on many devices yet, keep in mind that it will be updated at some point and unknown errors might occur. Feed back and suggestions are highly appreciated, please don't hesitate to [Contact](#Contact) us.
+SWATplusHybam is a new model and hasn't been tested on many devices yet, keep in mind that it will be updated at some point and unknown errors might occur. Feed back and suggestions are highly appreciated, please don't hesitate to [Contact](#Contact) us.
 
 ## Table of content
 * [Introduction](#Introduction)
@@ -11,15 +11,16 @@ SWATplusHybam is a new model and haven't been tested on many devices yet, keep i
 * [Contact](#Contact)
 
 ## Introduction
-The `SWATplusHybam` package is divided in two parts : The modified Fortran program (SWATplusHybam.exe) based on the SWAT+ model and the R notebook (SWAT_analysis) which is a tools to link SWAT+ models with your modeling workflows in R.
+The `SWATplusHybam` package is divided into two parts : The modified Fortran program (SWATplusHybam.exe) based on the SWAT+ model and the R notebook (SWAT_analysis) which is a tool to link SWAT+ models with your modeling workflows in R.
 
-The `SWATplusHybam` model is meant to replace the SWAT+ model, it provides the same functionalities but add new methods regarding routing and flexibility on the input parameters. These new algorithms regarding hydrological and sediment routing were developed by William Santini (william.santini@ird.fr) and are detailed in his PhD (Santini et al. 2019). Before running your model you can chose between multiple routing methods : kinetic wave, differential wave based on water height or discharge, you can also chose the type of floodplain for your model. On the other side, code maintenance and translation (from SWAT2012 to SWAT+) were done by Florent Papini (florent.papini@ird.fr).
+The `SWATplusHybam` model is meant to replace the SWAT+ model, it provides the same functionalities but adds new methods regarding routing and flexibility on the input parameters. These new algorithms regarding hydrological and sediment routing were developed by William Santini (william.santini@ird.fr) and are detailed in his PhD (Santini et al. 2019). Before running your model you can chose between multiple routing methods : kinetic wave, differential wave based on water height or discharge, you can also chose the type of floodplain for your model. On the other side, code maintenance and translation (from SWAT2012 to SWAT+) were done by Florent Papini (florent.papini@ird.fr).
 
  `SWATplusHybam` also provides a R notebook, SWAT_analysis, which purpose is to simplify the use of `SWATplusHybam` model by providing functions and tools to initialize and run your project. There are also some functions allowing an easy analysis of results. This notebook is mainly based on the SWATplusR package developed by Christoph Schuerz (christoph.schuerz@boku.ac.at).
 
 ## Installation
+
 ### Install the main package
-Download the good SWATplusHybam repository depending on your system OS (SWATplusHybam_64 for windows 64...). Extract the SWATplus.exe executable and the .dll files in your project working directory (your_project/scenarios/Default/TxtInOut/).
+Download the good SWATplusHybam repository depending on your OS system (SWATplusHybam_64 for windows 64...). Extract the SWATplus.exe executable and the .dll files in your project working directory (your_project/scenarios/Default/TxtInOut/).
 
 `SWATplusHybam` is meant to be piloted from a R program, so it is highly recommended to download the SWAT_analysis repository containing a R notebook showing the basics to run the model and a R file containing some helpful functions.
 
@@ -34,9 +35,90 @@ devtools::install_github("chrisschuerz/SWATplusR")
 If you encounter any issue during this step, please refer to the [SWATplusR](https://github.com/chrisschuerz/SWATplusR) page.
 
 ## Getting started
-In order to use the SWATplusHybam model you need to set up your project through QGIS with the QSWAT+ plugin. You can find great videos tutorials on the [SWAT+](https://swat.tamu.edu/software/plus/) website. Then initialize weather data and modify parameters if needed, you can go back to this step at any time if you want. The import point is the step "write input files" as once it's done you can close QGIS and SWATplusEditor they will not be needed for running the model and analyze data. You can go through the step "Run SWAT+" on SWATplusEditor but it's not going to run the new model `SWATplusHybam`.
+
+### Run the demo
+Start by downloading the hole Git Hub repository, download the latest R version and an IDE supporting the R notebook such as Rstudio.
+Once you got it all set up you need to download the main libraries that will be used for a simple run.
+
+```r
+# If you do not have the package devtools installed
+install.packages("devtools")
+devtools::install_github("chrisschuerz/SWATplusR")
+
+install.packages("readr")
+install.packages("plotly")
+install.packages("hydroGOF")
+```
+
+```r
+library(SWATplusR)
+library(readr)
+library(hydroGOF)
+library(plotly)
+
+source("tools_and_functions.R")
+```
+
+<img src="img/Ucayali.png" title="Requena" alt="plot" width="60%" style="display: block; margin: auto;" />
+
+```r
+# Put the path to your TxtInOut file here
+project_path <- "path_to_project/Scenarios/Default/TxtInOut"
+
+setup_input_files(project_path, list("htam.txt;hyd;1", "Qsf_lag.txt;sands;1"))
+setup_new_ch_parm(project_path)
+```
+
+```r
+#Output to csv in the print file
+q_sim_day <- run_swatplus(project_path = project_path,
+                          output = define_output(file = "channel_sd",
+                                                  variable = "flo_out",
+                                                  unit = 1),
+                          start_date = "2010-1-1",
+                          end_date = "2016-1-1",
+                          years_skip = 2)
+```
+
+```r
+# If you have observed data or saved simualtions you can load them here
+# Attach an example file ??
+q_obs = read_csv(file = paste(SWATplus_path, "/Qobs_req.csv", sep = ""))
+
+q_obs$Date <- as.Date(q_obs$Date, format = "%Y-%m-%d")
+
+sim_csv = read_csv(file = paste(project_path, "/channel_sd_day.csv", sep = ""), skip = 1)
+# Be carefull the channel number IS NOT the subbasin number!
+channel = 1
+sim_csv <- sim_csv[sim_csv$gis_id == channel,]
+sim_csv["date"] <- paste(sim_csv$yr, sim_csv$mon, sim_csv$day, sep = "-")
+sim_csv$date <- as.Date(sim_csv$date, format = "%Y-%m-%d")
+sim_csv$flo_out <- as.numeric(sim_csv$flo_out)
+
+sim_csv
+
+sim_month = monthly_average(sim_csv, "flo_out")
+
+sim_month
+```
+
+```r
+start_date = '2009-03-21'
+end_date = '2016-06-30'
+title = 'Requena'
+
+# Always start with observed or your reference data!
+simulations = list(q_obs, sim_csv, sim_month)
+simulation_names = list("q_obs", "sim1", "sim1_monthly_average")
+
+# Function to plot easily multiple figures of a same format
+plot_results(simulations, simulation_names, start_date, end_date, title)
+```
+<img src="img/Requena.png" title="Requena" alt="plot" width="60%" style="display: block; margin: auto;" />
 
 ### Perform your first model
+In order to use the SWATplusHybam model you need to set up your project through QGIS with the QSWAT+ plugin. You can find great video tutorials on the [SWAT+](https://swat.tamu.edu/software/plus/) website. Then initialize weather data and modify parameters if needed, you can go back to this step at any time if you want. The import point is the step "write input files" as once it's done you can close QGIS and SWATplusEditor they will not be needed for running the model and analyze data. You can go through the step "Run SWAT+" on SWATplusEditor but it's not going to run the new model `SWATplusHybam`.
+
 If you went successfully through the set up you can now go on the R notebook `SWAT_analysis` and try to perform a first run. There are no currently demo data, you will have to use one of your QSWAT+ project.
 
 ```r
@@ -77,15 +159,23 @@ Other simple ways to plot your data are shown on the [SWATplusR](https://chrissc
 
 ### Input parameters and input files
 `SWATplusHybam` offers the possibility to chose among multiple water routing methods. Each of these Fortran routines are described in Santini & al.
-```Fortran
-if (no_rte == 1)   call sd_ch_rt_ck_wave
-if (no_rte == 2)   call sd_rt_diff_wave_h
-if (no_rte == 3)   call sd_rtmuskKvar
-```
+| Number | Water routing method (no_rte) |
+| --- | --- |
+| 1 | sd_ch_rt_ck_wave |
+| 2 | sd_rt_diff_wave_h |
+| 3 | sd_rtmuskKvar |
+
 Parameter changes in a R notebook is already available thanks to parameter sets as described in [SWATplusR](https://github.com/chrisschuerz/SWATplusR). So here we are using the same trick to chose the water routing algorithm.
 ```r
-par_single = c("no_rte.bsn|change = abschg" = 5)
+par_single = c("no_rte.bsn|change = abschg" = 1)
 ```
+| Parameter | Description |
+| --- | --- |
+| no_rte | Water routing method range 0:8 |
+| fpgeom | Type of floodplain 0 is squared, 1 triangular |
+| theta_fp | Floodplain angle (Case of a tri. section) [rad] |
+| alpha_f | 0.2 < alpha < 0.7 (Bates et al., 2010) |
+
 A new feature from `SWATplusHybam` is the ability to handle observed data, in order to use them as limit conditions or to do data assimilation for example. This observed data has to come as a .txt file and has it's type has to be specified in the functions Below.
 ```r
 setup_input_files(project_path, list("htam.txt;hyd;1", "Qsf_lag.txt;sands;1"))
