@@ -123,6 +123,7 @@ source("tools_and_functions.R")
 
 # Put the path to your TxtInOut file here
 project_path <- "your_path/your_project/Scenarios/Default/TxtInOut"
+setup_new_ch_parm(project_path)
 ```
 
 ```r
@@ -152,7 +153,11 @@ plot_results(simulations, simulation_names, start_date, end_date, title)
 
 Other simple ways to plot your data are shown on the [SWATplusR](https://chrisschuerz.github.io/SWATplusR/articles/04_vis_example.html) Git page.
 
-### Input parameters and input files
+
+
+## Calibration
+
+### Input parameters
 `SWATplusHybam` offers the possibility to chose among multiple water routing methods. Each of these Fortran routines are described in Santini & al.
 | Number | Water routing method (no_rte) |
 | --- | --- |
@@ -187,8 +192,10 @@ q_sim_day <- run_swatplus(project_path = project_path,
                          parameter = par_single)
 ```
 
-## Calibration
-
+### Input files
+```r
+setup_input_files(project_path, list("htam.txt;hyd;1", "Qsf_lag.txt;sands;1"))
+```
 
 
 ## Contact
