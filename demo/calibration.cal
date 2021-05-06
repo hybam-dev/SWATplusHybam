@@ -1,0 +1,6 @@
+calibration.cal: written by SWAT+ editor v1.2.3 on 2020-11-06 14:57
+3
+cal_parm               chg_typ       chg_val     conds  soil_lyr1  soil_lyr2       yr1       yr2      day1      day2   obj_tot
+no_rte                  absval       3.00000         0         0         0         0         0         0         0         0
+alpha_f                 absval       0.90000         0         0         0         0         0         0         0         0
+fpgeom                  absval       0.00000         0         0         0         0         0         0         0         0

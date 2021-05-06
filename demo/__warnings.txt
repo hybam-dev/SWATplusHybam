@@ -1,0 +1,4 @@
+Skipping hmd import. File does not exist: D:\FP\Documents\Data\Exemple_QSWAT_Ucayali\Climat\Pcp\2018-04-TRMM_AMAZON\rh.txt
+Skipping slr import. File does not exist: D:\FP\Documents\Data\Exemple_QSWAT_Ucayali\Climat\Pcp\2018-04-TRMM_AMAZON\solar.txt
+Skipping tmp import. File does not exist: D:\FP\Documents\Data\Exemple_QSWAT_Ucayali\Climat\Pcp\2018-04-TRMM_AMAZON\tmp.txt
+Skipping wnd import. File does not exist: D:\FP\Documents\Data\Exemple_QSWAT_Ucayali\Climat\Pcp\2018-04-TRMM_AMAZON\wind.txt
