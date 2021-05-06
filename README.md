@@ -37,11 +37,11 @@ If you encounter any issue during this step, please refer to the [SWATplusR](htt
 ## Getting started
 
 ### Run the demo
-Start by downloading the hole Git Hub repository, download the latest R version and an IDE supporting the R notebook such as Rstudio.
-Once you got it all set up you need to download the main libraries that will be used for a simple run.
+- Download the whole Git Hub repository
+- Download the latest R version and an IDE supporting the R notebook such as Rstudio.
 
+Once you got it all set up you need to download the main libraries that will be used for a simple run. You can open the R notebook SWATplus_analysis.rmd in the SWAT_analysis folder and write in the console the following commands.
 ```r
-# If you do not have the package devtools installed
 install.packages("devtools")
 devtools::install_github("chrisschuerz/SWATplusR")
 
@@ -50,6 +50,7 @@ install.packages("plotly")
 install.packages("hydroGOF")
 ```
 
+Now you can load the useful libraries and functions for this example.
 ```r
 library(SWATplusR)
 library(readr)
@@ -59,18 +60,17 @@ library(plotly)
 source("tools_and_functions.R")
 ```
 
+This demo project is based on the Ucayali basin.
 <img src="img/Ucayali.png" title="Requena" alt="plot" width="60%" style="display: block; margin: auto;" />
 
+Set up the path to your project.
 ```r
 # Put the path to your TxtInOut file here
-project_path <- "path_to_project/Scenarios/Default/TxtInOut"
-
-setup_input_files(project_path, list("htam.txt;hyd;1", "Qsf_lag.txt;sands;1"))
-setup_new_ch_parm(project_path)
+project_path <- "path_to_project/demo"
 ```
 
+Run the model. You need to give the project path and the start and end date and number of warm up years. There are a lot of output types but we will be focusing on discharge at Requena one this example. Be careful, the channel (unit) number is not always the same as the basin number.
 ```r
-#Output to csv in the print file
 q_sim_day <- run_swatplus(project_path = project_path,
                           output = define_output(file = "channel_sd",
                                                   variable = "flo_out",
@@ -80,28 +80,23 @@ q_sim_day <- run_swatplus(project_path = project_path,
                           years_skip = 2)
 ```
 
-```r
-# If you have observed data or saved simualtions you can load them here
-# Attach an example file ??
-q_obs = read_csv(file = paste(SWATplus_path, "/Qobs_req.csv", sep = ""))
 
+```r
+q_obs = read_csv(file = paste(project_path, "/Qobs_req.csv", sep = ""))
 q_obs$Date <- as.Date(q_obs$Date, format = "%Y-%m-%d")
 
 sim_csv = read_csv(file = paste(project_path, "/channel_sd_day.csv", sep = ""), skip = 1)
-# Be carefull the channel number IS NOT the subbasin number!
 channel = 1
 sim_csv <- sim_csv[sim_csv$gis_id == channel,]
 sim_csv["date"] <- paste(sim_csv$yr, sim_csv$mon, sim_csv$day, sep = "-")
 sim_csv$date <- as.Date(sim_csv$date, format = "%Y-%m-%d")
 sim_csv$flo_out <- as.numeric(sim_csv$flo_out)
 
-sim_csv
-
 sim_month = monthly_average(sim_csv, "flo_out")
 
-sim_month
 ```
 
+Plot your results.
 ```r
 start_date = '2009-03-21'
 end_date = '2016-06-30'
