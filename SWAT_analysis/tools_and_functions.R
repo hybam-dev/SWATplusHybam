@@ -7,16 +7,6 @@
 ## (florent.papini@ird.fr)
 ##################################################
 
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(dygraphs)
-library(xts)
-library(readr)
-library(hydroGOF)
-library(plotly)
-library(lubridate)
-
 
 ## View timeseries:
 ##################################################
@@ -186,7 +176,7 @@ setup_input_files <- function(path, files)
         hyd = paste("hydro", file, sep="    ")
       }
       else {
-      hyd = paste(hyd, file, sep="    ")
+        hyd = paste(hyd, file, sep="    ")
       }
     }
     
@@ -195,7 +185,7 @@ setup_input_files <- function(path, files)
         wl = paste("wl", file, sep="    ")
       }
       else {
-      wl = paste(wl, file, sep="    ")
+        wl = paste(wl, file, sep="    ")
       }
     }
     
@@ -204,7 +194,7 @@ setup_input_files <- function(path, files)
         sands = paste("sands", file, sep="    ")
       }
       else {
-      sands = paste(sands, file, sep="    ")
+        sands = paste(sands, file, sep="    ")
       }
     }
     
@@ -213,7 +203,7 @@ setup_input_files <- function(path, files)
         da = paste("da", file, sep="    ")
       }
       else {
-      da = paste(da, file, sep="    ")
+        da = paste(da, file, sep="    ")
       }
     }
     
@@ -251,6 +241,32 @@ alpha_f                        bsn       0.00000      10.00000              null
 }
 
 
+## Write input files:
+##################################################
+setup_new_ch_parm <- function(path) 
+{
+  my_file<-file(paste(path,"/hyd-sed-lte.cha", sep=""))
+  
+  my_new_file = readLines(paste(path,"/hyd-sed-lte.cha", sep=""))
+  
+  # New header
+  my_new_file[2] = paste(substr(my_new_file[2], 1, 328), "           kfp   description", sep="")
+  
+  n = 3
+  # Adding new parameters
+  for (line in my_new_file) {
+    if(line == my_new_file[1] | line == my_new_file[2])
+      next
+    line = paste(substr(line, 1, 328), "       5.00000", sep="")
+    # Replacing with the new line
+    my_new_file[n] = line
+    n = n + 1
+  }
+  
+  writeLines(my_new_file, my_file)
+  
+  close(my_file)
+}
 
 
 

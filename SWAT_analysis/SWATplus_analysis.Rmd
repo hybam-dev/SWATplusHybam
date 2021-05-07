@@ -38,74 +38,56 @@ SWATplus_path <- "C:/Users/FP/source/repos/SWATplus/SWATplus/Debug/"
 file.copy(paste(SWATplus_path, "SWATplus.exe", sep = ""), project_path, overwrite = TRUE)
 
 setup_input_files(project_path, list("htam.txt;hyd;1", "Qsf_lag.txt;sands;1"))
+setup_new_ch_parm(project_path)
 ```
+
 ```{r Run SWATplusHybam, include=FALSE}
+#Flow routing module
 #Output to csv in the print file
+# par_single <- c("no_rte.bsn|change = absval" = 1.0)
+par_set <- c("no_rte.bsn|change = absval" = 2.0,
+                  "ci.bsn|change = absval" = 0.6,
+                  "cn2.hru|change = absval" = 98.0)
+
 q_sim_day <- run_swatplus(project_path = project_path,
                           output = define_output(file = "channel_sd",
                                                   variable = "flo_out",
                                                   unit = 1),
-                          start_date = "2000-1-1",
-                          end_date = "2016-1-1",
+                          parameter = par_set,
+                          start_date = "2010-9-1",
+                          end_date = "2015-8-1",
                           years_skip = 2)
 ```
 
 
 
-```{r Run SWATplusHybam, include=FALSE}
-#Output to csv in the print file
-setwd(dir = project_path)
-system(shQuote(paste(project_path, "/SWATplus.exe", sep = ""), type = "cmd"))
+
+
+
+```{r}
+q_sim_day
 ```
 
 
 
 ```{r Load data}
 # If you have observed data or saved simualtions you can load them here
-# Attach an example file ??
-q_obs = read_csv(file = "D:/FP/Documents/Data/Qobs_req.csv")
+q_obs = read_csv(file = paste(project_path, "/Qobs_req.csv", sep = ""))
 q_obs$Date <- as.Date(q_obs$Date, format = "%Y-%m-%d")
-
-sim_csv = read_csv(file = paste(project_path, "/channel_sd_day.csv", sep = ""), skip = 1)
-# Be carefull the channel number IS NOT the subbasin number!
-channel = 1
-sim_csv <- sim_csv[sim_csv$gis_id == channel,]
-sim_csv["date"] <- paste(sim_csv$yr, sim_csv$mon, sim_csv$day, sep = "-")
-sim_csv$date <- as.Date(sim_csv$date, format = "%Y-%m-%d")
-sim_csv$flo_out <- as.numeric(sim_csv$flo_out)
-
-sim_csv
-
-sim_month = monthly_average(sim_csv, "flo_out")
-
-sim_month
-
 ```
-
-
-```{r}
-q_subset <- load_swat_run(save_dir = path_saved_q,
-                          variable = "q_lat",
-                          run = 1:3)
-```
-
 
 
 ```{r Compute statistics}
-start_date = '2009-03-21'
-end_date = '2016-06-30'
-title = 'Lagarto'
+start_date = '2012-09-01'
+end_date = '2015-7-30'
+title = 'Requena'
 
 # Always start with observed or your reference data!
-simulations = list(q_obs, sim_csv, sim_month)
-simulation_names = list("q_obs", "sim1", "sim1_monthly_average")
+simulations = list(q_obs, q_sim_day$simulation)
+simulation_names = list("q_obs", "sim1")
 
 # Function to plot easily multiple figures of a same format
 plot_results(simulations, simulation_names, start_date, end_date, title)
-
-#Select by channel? 
-#Select the output
-# If you want to add/modify statistics, change colors/mode on the graph, you can do it in the functions file or on the step by step example below
 ```
 
 
