@@ -1,5 +1,0 @@
- UcayaliNoFp              
-  SWAT+   MODULAR Rev 2020.60.4                                                 
-  
-                                                                            --YIELD (kg/ha)--
-  jday   mon   day    yr    unit PLANTNM                         MASS          C           N           P
