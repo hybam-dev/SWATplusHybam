@@ -1,2 +1,0 @@
- UcayaliNoFp               SWAT+   MODULAR Rev 2020.60.4                                                  
-       year     plant_no   plant_name       harv_area(ha)    yld(t)         yld(t/ha)      

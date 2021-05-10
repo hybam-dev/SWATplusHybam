@@ -1,4 +1,0 @@
-hydrology.wet: written by SWAT+ editor v1.2.3 on 2020-11-06 14:57
-name                    hru_ps         dp_ps        hru_es         dp_es             k          evap   vol_area_co      vol_dp_a      vol_dp_b      hru_frac  
-hydwet050              0.10000      20.00000       0.25000     100.00000       0.01000       0.70000       1.00000       1.00000       1.00000       0.50000  
-hydwet051              0.10000      20.00000       0.25000     100.00000       0.01000       0.70000       1.00000       1.00000       1.00000       0.50000  
