@@ -1,7 +1,7 @@
 # SWATplusHybam <img src="./img/Hybam.jpg" align="right" />
-`SWATplusHybam` is a model used to simulate water and sediments routing. It is a modified version of the [SWAT+](https://swat.tamu.edu/software/plus/) model aiming to enhance precision on simulations for large sized basins (such as the Amazon basin). It is meant to be handled from a simple R program based on the [SWATplusR](https://github.com/chrisschuerz/SWATplusR) package.
+`SWATplusHybam` is a modified version of the [SWAT+](https://swat.tamu.edu/software/plus/) model, aiming to enhance water and sediment routing for large basins (such as the Amazon basin). This version is handled from a simple R program based on the [SWATplusR](https://github.com/chrisschuerz/SWATplusR) package.
 
-SWATplusHybam is a new model and hasn't been tested on many devices yet, keep in mind that it will be updated at some point and unknown errors might occur. Feed back and suggestions are highly appreciated, please don't hesitate to [Contact](#Contact) us.
+SWATplusHybam is under development and hasn't been tested on many devices and projects yet, keep in mind that it will be updated at some point and unknown errors might occur. Feed back and suggestions are highly appreciated, please don't hesitate to [Contact](#Contact) us.
 
 ## Table of content
 * [Introduction](#Introduction)
@@ -11,16 +11,25 @@ SWATplusHybam is a new model and hasn't been tested on many devices yet, keep in
 * [Contact](#Contact)
 
 ## Introduction
-The `SWATplusHybam` package is divided into two parts : The modified Fortran program (SWATplusHybam.exe) based on the SWAT+ model and the R notebook (SWAT_analysis) which is a tool to link SWAT+ models with your modeling workflows in R.
+The `SWATplusHybam` package is divided into two parts : The modified Fortran program of the SWAT+ model (SWATplusHybam.exe) and the R notebook (SWAT_analysis) which is a tool to link SWAT+ projets with your modeling workflows in R.
 
-The `SWATplusHybam` model is meant to replace the SWAT+ model, it provides the same functionalities but adds new methods regarding routing and flexibility on the input parameters. These new algorithms regarding hydrological and sediment routing were developed by William Santini (william.santini@ird.fr) and are detailed in his PhD (Santini et al. 2019). Before running your model you can chose between multiple routing methods : kinetic wave, differential wave based on water height or discharge, you can also chose the type of floodplain for your model. On the other side, code maintenance and translation (from SWAT2012 to SWAT+) were done by Florent Papini (florent.papini@ird.fr).
+<img src="img/SWATplusHybamDiagram.png" title="SWATplusHybam diagram" alt="plot" width="80%" style="display: block; margin: auto;" />
 
- `SWATplusHybam` also provides a R notebook, SWAT_analysis, which purpose is to simplify the use of `SWATplusHybam` model by providing functions and tools to initialize and run your project. There are also some functions allowing an easy analysis of results. This notebook is mainly based on the SWATplusR package developed by Christoph Schuerz (christoph.schuerz@boku.ac.at).
+The `SWATplusHybam` provides the same functionalities as the SWAT+ model but adds new methods regarding water and sediment routing, as well as flexibility on the input parameters.
+- A modified version of the SWAT Muskingum routing method was implemented. In this version, the parameter K is a function of the water level. In particular, this method allows to increase the lag time of the flood wave propagation (and the water volume stored in the conceptual reservoir) when the floodplain is active.
+- Two hydraulic routing (1d) were also implemented:
+  - The kinematic wave approximation of the shallow water equations
+  - The diffusive wave approximation
+
+
+These new algorithms regarding hydrological and sediment routing were developed by William Santini (william.santini@ird.fr) and are detailed in his PhD (Santini et al. 2019). Before running your model you can chose between multiple routing methods : kinetic wave, differential wave based on water height or discharge, you can also chose the type of floodplain for your model. On the other side, code maintenance and translation (from SWAT2012 to SWAT+) were done by Florent Papini (florent.papini@ird.fr).
+
+ The `SWATplusHybam` package also provides a R notebook, SWAT_analysis.rmd, which purpose is to simplify the use of `SWATplusHybam` model by providing functions and tools to initialize and run your project. There are also some functions allowing an easy analysis of results. This notebook is mainly based on the SWATplusR package developed by Christoph Schuerz (christoph.schuerz@boku.ac.at).
 
 ## Installation
 
 ### Install the main package
-Download the good SWATplusHybam repository depending on your OS system (SWATplusHybam_64 for windows 64...). Extract the SWATplus.exe executable and the .dll files in your project working directory (your_project/scenarios/Default/TxtInOut/).
+Download the right SWATplusHybam repository depending on your OS system (SWATplusHybam_64 for windows 64...). Extract the SWATplus.exe executable and the .dll files in your project working directory (your_project/scenarios/Default/TxtInOut/).
 
 `SWATplusHybam` is meant to be piloted from a R program, so it is highly recommended to download the SWAT_analysis repository containing a R notebook showing the basics to run the model and a R file containing some helpful functions.
 
