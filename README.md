@@ -205,7 +205,30 @@ q_sim_day <- run_swatplus(project_path = project_path,
                           years_skip = 2,
                           n_thread = 4)
 ```
-It allows you to perform research on the best input arguments.
+It allows you to perform research on the best input arguments. (Not yet looked to much into it).
+
+You can save your simulations in databases if you want to use them later (maybe recommended for large simulations).
+```r
+#Flow routing module
+par_set <- c("no_rte.bsn|change = absval" = 1.0)
+
+q_sim_day <- run_swatplus(project_path = project_path,
+                          output = define_output(file = "channel_sd",
+                                                  variable = "flo_out",
+                                                  unit = 1),
+                          parameter = par_set,
+                          start_date = "2010-9-1",
+                          end_date = "2015-8-1",
+                          years_skip = 2,
+                          save_file = "q_sim_req",
+                          return_output = FALSE)
+```
+And then load the selected run you want.
+```r
+q_subset <- load_swat_run(save_dir = "yourpath/demo/q_sim_req",
+                          variable = "flo_out",
+                          run = 1)
+```
 
 ### Perform your first model
 In order to use the SWATplusHybam model you need to set up your project through QGIS with the QSWAT+ plugin. You can find great video tutorials on the [SWAT+](https://swat.tamu.edu/software/plus/) website. Then initialize weather data and modify parameters if needed, you can go back to this step at any time if you want. The import point is the step "write input files" as once it's done you can close QGIS and SWATplusEditor they will not be needed for running the model and analyze data. You can go through the step "Run SWAT+" on SWATplusEditor but it's not going to run the new model `SWATplusHybam`.
