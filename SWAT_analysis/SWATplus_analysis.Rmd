@@ -5,8 +5,7 @@ output:
     df_print: paged
 Script purpose: Initialise and run SWATplusHybam simulations and plot your results
 Date: 10/14/2020
-Author: Florent Papini, Geoscience Environnement Toulouse, Observatoire Midi-Pyrénnées,
-  (florent.papini@ird.fr)
+Author: Florent Papini, Research Institute for Development (florent.papini@ird.fr)
 ---
 
 
@@ -23,7 +22,7 @@ source("tools_and_functions.R")
 
 ```{r SWAT+ project path}
 # Put the path to your TxtInOut file here
-project_path <- "D:/FP/Documents/SWATplus_projects/UcayaliNoFp/Scenarios/Default/TxtInOut"
+project_path <- "yourpath/demo"
 
 setup_input_files(project_path, "hbc.txt;hyd;1")
 setup_par_bounds(project_path)
@@ -33,14 +32,12 @@ setup_new_ch_parm(project_path)
 
 ```{r Run SWATplusHybam, include=FALSE}
 #Flow routing module
-#Output to csv in the print file
-# par_single <- c("no_rte.bsn|change = absval" = 1.0)
-par_set <- c("no_rte.bsn|change = absval" = 0.0)
+par_set <- c("no_rte.bsn|change = absval" = 1.0)
 
 q_sim_day <- run_swatplus(project_path = project_path,
                           output = define_output(file = "channel_sd",
                                                   variable = "flo_out",
-                                                  unit = 1),
+                                                  unit = 1:3),
                           parameter = par_set,
                           start_date = "2010-9-1",
                           end_date = "2015-8-1",
