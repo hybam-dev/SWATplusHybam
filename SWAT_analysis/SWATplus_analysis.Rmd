@@ -13,16 +13,9 @@ Author: Florent Papini, Geoscience Environnement Toulouse, Observatoire Midi-Pyr
 ```{r Load libraries}
 library(SWATplusR)
 
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(dygraphs)
-library(xts)
 library(readr)
 library(hydroGOF)
 library(plotly)
-library(lubridate)
-library(rlist)
 
 source("tools_and_functions.R")
 ```
@@ -32,23 +25,17 @@ source("tools_and_functions.R")
 # Put the path to your TxtInOut file here
 project_path <- "D:/FP/Documents/SWATplus_projects/UcayaliNoFp/Scenarios/Default/TxtInOut"
 
-# Put the path to the SWATplusHybam.exe here
-# To remove for the offcial release !!
-SWATplus_path <- "C:/Users/FP/source/repos/SWATplus/SWATplus/Debug/"
-file.copy(paste(SWATplus_path, "SWATplus.exe", sep = ""), project_path, overwrite = TRUE)
-
-setup_input_files(project_path, list("htam.txt;hyd;1", "Qsf_lag.txt;sands;1"))
+setup_input_files(project_path, "hbc.txt;hyd;1")
 setup_par_bounds(project_path)
 setup_new_ch_parm(project_path)
 ```
+
 
 ```{r Run SWATplusHybam, include=FALSE}
 #Flow routing module
 #Output to csv in the print file
 # par_single <- c("no_rte.bsn|change = absval" = 1.0)
-par_set <- c("no_rte.bsn|change = absval" = 2.0,
-                  "ci.bsn|change = absval" = 0.6,
-                  "cn2.hru|change = absval" = 98.0)
+par_set <- c("no_rte.bsn|change = absval" = 0.0)
 
 q_sim_day <- run_swatplus(project_path = project_path,
                           output = define_output(file = "channel_sd",
@@ -83,186 +70,15 @@ start_date = '2012-09-01'
 end_date = '2015-7-30'
 title = 'Requena'
 
+sim_m_average = flow_monthly_average(q_sim_day$simulation)
+
 # Always start with observed or your reference data!
-simulations = list(q_obs, q_sim_day$simulation)
-simulation_names = list("q_obs", "sim1")
+simulations = list(q_obs, q_sim_day$simulation, sim_m_average)
+simulation_names = list("q_obs", "sim1", "average")
 
 # Function to plot easily multiple figures of a same format
 plot_results(simulations, simulation_names, start_date, end_date, title)
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r Plot results}
-# q_obs_stat <- q_obs[q_obs$Date >= start_date & q_obs$Date <= end_date,]
-# 
-# PBIAS = round(pbias(sim = q_obs_stat$Qobs, obs = q_obs_stat$Qobs))
-# NSE = round(NSE(sim = q_obs_stat$Qobs, obs = q_obs_stat$Qobs))
-# 
-# G = plot_ly(data = q_obs, x = ~ Date, y = ~ Qobs, name = 'Qobs',type = 'scatter',
-#             mode = "line", alpha = 0.5)
-# 
-# G = add_trace(G, data = q_sim, x = ~ Date, y = ~ Qobs, name = paste("Qobs PBIAS:",PBIAS,", NSE:", NSE, ""))
-# G = add_trace(G, data = q_sim2, x = ~ Date, y = ~ Qobs, name = paste("Qobs PBIAS:",PBIAS,", NSE:", NSE, ""))
-# G = add_trace(G, data = q_sim3, x = ~ Date, y = ~ Qobs, name = paste("Qobs PBIAS:",PBIAS,", NSE:", NSE, ""))
-# 
-# G <- layout(G, title = title,
-#              xaxis = list(title = "Date", range = c(start_date,end_date)),
-#              yaxis = list(title = "Q [m3/s]"))
-# G
-```
-
-```{r Run SWATplusHybam v2}
-# If you encounter the error : (revision < 57) ... just run again the chunk
-
-q_sim_day <- run_swatplus(project_path = project_path,
-                          output = define_output(file = "channel_sd",
-                                                  variable = "flo_out",
-                                                  unit = 1),
-                          start_date = "2013-1-1",
-                          end_date = "2018-1-1",
-                          years_skip = 2),
-                          parameter = par_single)
-```
-
-
-```{r Load observed data}
-# If you have observed data you can load it here
-# Attach an example file ??
-# q_obs = read_csv(file = "D:/FP/Documents/Data/Qobs_lagarto.csv")
-```
-
-
-```{r Analysis / plotting}
-# view_timeseries(q_sim = q_sim_day, q_obs = q_obs)
-```
-
-
-```{r Save simulations}
-# Make a function out of this
-# file_path = "D:/FP/Documents/SWATplus_projects/Ucayali/q_sim_day.csv"
-# test_name = "sd_ch_rt_ck_wave_test5"
-# 
-# save_sim(file_path = file_path, sim= q_sim_day, test_name = test_name)
-```
-
-
-```{r Compare simulations}
-# file_path = "D:/FP/Documents/SWATplus_projects/Ucayali/q_sim_day.csv"
-# 
-# 
-# # Put it in the functions file
-# if(file.exists(file_path)) {
-#   q_sims <- read.csv(file_path)
-# } else {
-#   print("No file found")
-# }
-# 
-# # Nash and PBIAS calculation
-# 
-# view_timeseries(q_sims, q_obs)
-# dygraph(as.data.frame(q_sims))
-```
-
-
-
-
-
-You can use the code chunks below if you need a more specific run of SWAT+
-
-```{r Change parameters}
-# par_single <- c("cn2.hru|change = pctchg" = - 5,
-#                 "alpha.gw|change = absval" = 0.5)
-# 
-# par_set <- tibble("cn2.hru|change = abschg" = runif(8,-15,10),
-#                   "alpha.gw|change = absval" = runif(8, 0, 1))
-```
-
-```{r run SWATplus set of parameters}
-# q_sim_day <- run_swatplus(project_path = project_path,
-#                        output = list(pet = define_output(file = "basin_wb",
-#                                        variable = "pet",
-#                                        unit = 1),
-#                                      pcp = define_output(file = "basin_wb",
-#                                        variable = "precip",
-#                                        unit = 1),
-#                                      aet = define_output(file = "basin_wb",
-#                                        variable = "et",
-#                                        unit = 1),
-#                                      q_sur = define_output(file = "basin_wb",
-#                                        variable = "surq_gen",
-#                                        unit = 1),
-#                                      q_lat = define_output(file = "basin_wb",
-#                                        variable = "latq",
-#                                        unit = 1)),
-#                        parameter = par_wb,
-#                        start_date = "2000-01-01",
-#                        end_date = "2007-12-31",
-#                        output_interval = "m",
-#                        years_skip = 3)
-```
-
-
-
-```{r Run SWATplusHybam v2}
-# If you encounter the error : (revision < 57) ... just run again the chunk
-project_path <- "D:/FP/Documents/SWATplus_projects/UcayaliNoFp/Scenarios/Default/TxtInOut"
-par_mod <- c("cn2.hru|change = abschg" = 5,
-             "rte.bsn_cc|change = abschg" = 1)
-
-q_sim_day <- run_swatplus(project_path = project_path,
-                          output = define_output(file = "channel_sd",
-                                                  variable = "flo_out",
-                                                  unit = 1),
-                          start_date = "2013-1-1",
-                          end_date = "2018-1-1",
-                          years_skip = 2,)
-                          # parameter = par_single)
-```
-
-```{r Load sim}
-scan_swat_run(save_dir = project_path)
-
-q_subset <- load_swat_run(save_dir = project_path,
-                          variable = "q_lat",
-                          run = 1:3)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -121,7 +121,7 @@ plot_results <- function(simulations, simulation_names, begin_date, end_date, ti
 
 ## Monthly average:
 ##################################################
-monthly_average <- function(df, var) 
+flow_monthly_average <- function(df) 
 {
   df$month = format(df$date, format = "%m")
   df$year = format(df$date, format = "%Y")
@@ -137,19 +137,13 @@ monthly_average <- function(df, var)
   return(Agg)
 }
 
-## Load channel_sd_day:
-##################################################
-load_channel_sd_day <- function(path) 
-{
-  
-}
-
 
 
 ## Write input files:
 ##################################################
 setup_input_files <- function(path, files) 
 {
+  files = list(files)
   # clear previous input files
   my_file<-file(paste(path,"/file.cio", sep=""))
   
@@ -226,16 +220,16 @@ setup_par_bounds <- function(path)
   
   # clean the old file input infos
   my_new_file = readLines(paste(path,"/cal_parms.cal", sep=""))
-  my_new_file = my_new_file[-(187:191)]
+  my_new_file = my_new_file[-(187:195)]
   my_new_file[2] = "195"
   write(my_new_file, file=paste(path,"/cal_parms.cal", sep=""))
   
   # create new lines
   bounds = c("no_rte                         bsn       0.00000      10.00000              null
 fpgeom                         bsn       0.00000      10.00000              null
-theta_fp                       bsn       0.00000      10.00000              null
+theta_fp                       bsn       0.00000      10.00000              rad
 alpha_f                        bsn       0.00000      10.00000              null
-ci                             bsn       0.00000      10.00000              null
+cnfp                           bsn       0.00000      10.00000              null
 mkkco1                         bsn       0.00000      10.00000              null
 mkkco2                         bsn       0.00000      10.00000              null
 mkkco3                         bsn       0.00000      10.00000              null
