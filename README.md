@@ -89,7 +89,7 @@ q_sim_day <- run_swatplus(project_path = project_path,
                           output = define_output(file = "channel_sd",
                                                   variable = "flo_out",
                                                   unit = 1),
-                          start_date = "2010-1-1",
+                          start_date = "2009-1-1",
                           end_date = "2016-1-1",
                           years_skip = 2)
 ```
@@ -120,7 +120,7 @@ simulation_names = list("q_obs", "base SWAT+", "average")
 # Function to plot easily multiple figures of a same format
 plot_results(simulations, simulation_names, start_date, end_date, title)
 ```
-<img src="img/Requena.png" title="Requena" alt="plot" width="60%" style="display: block; margin: auto;" />
+<img src="img/Requena.png" title="Requena" alt="plot" width="100%" style="display: block; margin: auto;" />
 
 Base SWAT+ doesn't give the precise result we are looking for. The new water routing methods can be selected as an argument for the run_swatplus function. Don't forget to modify the variable name or you will erased the previous simulation. The Muskingum method is the parameter no_rte = 3.0.
 ```r
@@ -131,7 +131,7 @@ q_sim_day_2 <- run_swatplus(project_path = project_path,
                                                   variable = "flo_out",
                                                   unit = 1),
                           parameter = par_single,
-                          start_date = "2010-1-1",
+                          start_date = "2009-1-1",
                           end_date = "2016-1-1",
                           years_skip = 2)
 ```
@@ -164,7 +164,7 @@ q_sim_day_3 <- run_swatplus(project_path = project_path,
                                                   variable = "flo_out",
                                                   unit = 1),
                           parameter = par_single,
-                          start_date = "2010-1-1",
+                          start_date = "2009-1-1",
                           end_date = "2016-1-1",
                           years_skip = 2)
 ```
@@ -176,7 +176,7 @@ q_sim_day_3 <- run_swatplus(project_path = project_path,
                                                   variable = "flo_out",
                                                   unit = 1:3),
                           parameter = par_single,
-                          start_date = "2010-1-1",
+                          start_date = "2009-1-1",
                           end_date = "2016-1-1",
                           years_skip = 2)
 ```
@@ -200,7 +200,7 @@ q_sim_day <- run_swatplus(project_path = project_path,
                                                   variable = "flo_out",
                                                   unit = 1:3),
                           parameter = par_set,
-                          start_date = "2010-9-1",
+                          start_date = "2009-9-1",
                           end_date = "2015-8-1",
                           years_skip = 2,
                           n_thread = 4)
@@ -217,7 +217,7 @@ q_sim_day <- run_swatplus(project_path = project_path,
                                                   variable = "flo_out",
                                                   unit = 1),
                           parameter = par_set,
-                          start_date = "2010-9-1",
+                          start_date = "2009-9-1",
                           end_date = "2015-8-1",
                           years_skip = 2,
                           save_file = "q_sim_req",
