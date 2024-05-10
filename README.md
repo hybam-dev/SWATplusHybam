@@ -1,5 +1,5 @@
-# SWATplusHybam <img src="./img/Hybam.jpg" align="right" />
-`SWATplusHybam` is a modified version of the [SWAT+](https://swat.tamu.edu/software/plus/) model, aiming to enhance water and sediment routing for large basins (such as the Amazon basin). This version is handled from a simple R program based on the [SWATplusR](https://github.com/chrisschuerz/SWATplusR) package.
+# SWAT_Hybam <img src="./img/Hybam.jpg" align="right" />
+`SWAT_Hybam` is a modified version of the [SWAT+](https://swat.tamu.edu/software/plus/) model, aiming to enhance water and sediment routing for large basins (such as the Amazon basin). This version is handled from a simple R program based on the [SWATplusR](https://github.com/chrisschuerz/SWATplusR) package.
 
 SWATplusHybam is under development and hasn't been tested on many devices and projects yet, keep in mind that it will be updated at some point and unknown errors might occur. Feed back and suggestions are highly appreciated, please don't hesitate to [Contact](#Contact) us.
 
